@@ -1,0 +1,1 @@
+Concurrently builds a Markov chain out of multiple bufio.Scanner instances.
