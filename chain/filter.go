@@ -129,3 +129,27 @@ func SubstitutionFilter(substitutions map[string]string) SourceFilter {
 		}
 	})
 }
+
+// PrefixFilter filters a TokenSource by removing the specified prefix found
+// in candidate tokens. If set to iterate, it will repeatedly attempt to
+// trim the prefix until the string is empty or no more instances of the
+// prefix are found
+func PrefixFilter(prefix string, iterate bool) SourceFilter {
+	return MakeFuncFilter(func(candidate string) ([]string, error) {
+		if iterate {
+			trimmed := candidate
+			for trimmed != "" {
+				next := strings.TrimPrefix(trimmed, prefix)
+				if next == trimmed {
+					return []string{trimmed}, nil
+				} else {
+					trimmed = next
+				}
+			}
+
+			return []string{trimmed}, nil
+		} else {
+			return []string{strings.TrimPrefix(candidate, prefix)}, nil
+		}
+	})
+}
